@@ -1,0 +1,49 @@
+@import "tailwindcss";
+
+/* ============================================================
+   TOKENS DE DISEÑO — idénticos al demo_v1.html
+   ============================================================ */
+:root {
+  --sage:      #7BAE8A;
+  --sage-lt:   #EBF4EE;
+  --sage-dk:   #4A7A5A;
+  --sky:       #89B4CC;
+  --sky-lt:    #E8F3F9;
+  --sky-dk:    #3A7CA0;
+  --lav:       #A89BC4;
+  --lav-lt:    #F0EDF8;
+  --lav-dk:    #6A5A90;
+  --peach:     #D4956A;
+  --peach-lt:  #FAEEE6;
+  --rose:      #C47B8A;
+  --rose-lt:   #F8ECF0;
+  --beige:     #F5F0E8;
+  --beige-dk:  #D6CFC3;
+  --white:     #FFFFFF;
+  --gray-1:    #F8F7F5;
+  --gray-2:    #EDE9E3;
+  --gray-3:    #C8C2B8;
+  --gray-4:    #9C9488;
+  --gray-5:    #6B6560;
+  --gray-6:    #3D3A36;
+  --text:      #2E2B27;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+  --shadow:    0 2px 12px rgba(0,0,0,0.07);
+  --shadow-md: 0 4px 20px rgba(0,0,0,0.10);
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--beige);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.6;
+}
