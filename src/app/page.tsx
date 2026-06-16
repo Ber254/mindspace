@@ -5,8 +5,15 @@ import sql from '@/lib/db'
 import { TopBar } from '@/components/tenant/TopBar'
 import { PatientPageClient } from '@/components/tenant/PatientPageClient'
 
-export default async function HomePage() {
-  const slug = await getTenantSlug()
+interface Props {
+  searchParams: Promise<{ tenant?: string }>
+}
+
+export default async function HomePage({ searchParams }: Props) {
+  // Leer slug: primero del proxy header, luego del query param ?tenant=
+  const headerSlug = await getTenantSlug()
+  const { tenant: paramSlug } = await searchParams
+  const slug = headerSlug ?? paramSlug ?? null
 
   if (!slug) {
     return <LandingPage />
@@ -20,7 +27,7 @@ export default async function HomePage() {
     return (
       <main style={{ padding: 40, fontFamily: 'inherit' }}>
         <div style={{ color: '#8A2020', background: '#FBE9E9', padding: '16px 20px', borderRadius: 12, maxWidth: 400 }}>
-          Consultorio no encontrado. Verificá el link.
+          Consultorio no encontrado. Verificá el link. (slug: {slug})
         </div>
       </main>
     )
@@ -61,16 +68,12 @@ function LandingPage() {
           background: 'var(--sky-lt)', border: '1px solid var(--sky)',
           borderRadius: 'var(--radius-md)', padding: '16px 20px', textAlign: 'left',
         }}>
-          <strong style={{ color: 'var(--sky-dk)' }}>Desarrollo local</strong>
+          <strong style={{ color: 'var(--sky-dk)' }}>Para acceder a un consultorio</strong>
           <p style={{ fontSize: 13, color: 'var(--gray-5)', marginTop: 6 }}>
-            Para probar un tenant abrí{' '}
+            Usá la URL con el parámetro tenant, por ejemplo:{' '}
             <code style={{ background: 'var(--gray-2)', padding: '2px 6px', borderRadius: 4 }}>
-              demo.localhost:3000
+              ?tenant=demo
             </code>
-          </p>
-          <p style={{ fontSize: 12, color: 'var(--gray-4)', marginTop: 8 }}>
-            Necesitás PostgreSQL corriendo con el{' '}
-            <code>schema.sql</code> aplicado.
           </p>
         </div>
       </div>
