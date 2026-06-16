@@ -5,13 +5,17 @@ type ActiveTab = 'paciente' | 'pro' | 'admin'
 interface TopBarProps {
   settings: TenantSettings
   activeTab?: ActiveTab
+  tenantSlug?: string
 }
 
-export function TopBar({ settings, activeTab = 'paciente' }: TopBarProps) {
+export function TopBar({ settings, activeTab = 'paciente', tenantSlug }: TopBarProps) {
+  // Si hay slug lo agregamos como query param para entornos sin subdominio (ej: Vercel free)
+  const q = tenantSlug ? `?tenant=${tenantSlug}` : ''
+
   const tabs: { id: ActiveTab; label: string; href: string }[] = [
-    { id: 'paciente', label: '🌿 Pacientes',      href: '/'     },
-    { id: 'pro',      label: '🧠 Profesionales',  href: '/pro'  },
-    { id: 'admin',    label: '🏠 Administración', href: '/admin' },
+    { id: 'paciente', label: '🌿 Pacientes',      href: `/${q}`      },
+    { id: 'pro',      label: '🧠 Profesionales',  href: `/pro${q}`   },
+    { id: 'admin',    label: '🏠 Administración', href: `/admin${q}` },
   ]
 
   return (
@@ -29,7 +33,7 @@ export function TopBar({ settings, activeTab = 'paciente' }: TopBarProps) {
       boxShadow: '0 1px 8px rgba(0,0,0,0.06)',
     }}>
       {/* Logo */}
-      <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 20, fontWeight: 700, color: 'var(--sage-dk)', textDecoration: 'none' }}>
+      <a href={`/${q}`} style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 20, fontWeight: 700, color: 'var(--sage-dk)', textDecoration: 'none' }}>
         <span style={{ width: 10, height: 10, borderRadius: '50%', background: 'var(--lav)', display: 'inline-block' }} />
         {settings.marca}
       </a>

@@ -36,7 +36,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <TopBar settings={settings} />
+      <TopBar settings={settings} tenantSlug={slug} />
       <PatientPageClient
         tenantSlug={slug}
         settings={settings}

@@ -31,26 +31,24 @@ function extractTenantSlug(hostname: string): string | null {
 }
 
 export function proxy(request: NextRequest) {
-  const { pathname, hostname } = request.nextUrl
+  const { pathname, hostname, searchParams } = request.nextUrl
 
   // No interceptar archivos estáticos ni rutas de Next internos
   if (
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
-    pathname.includes('.')          // archivos con extensión: .ico, .png, etc.
+    pathname.includes('.')
   ) {
     return NextResponse.next()
   }
 
-  const slug = extractTenantSlug(hostname)
+  // Primero intentar subdominio, luego query param ?tenant=
+  const slug = extractTenantSlug(hostname) ?? searchParams.get('tenant')
 
   if (!slug) {
-    // Sin tenant → redirigir a landing o mostrar página de inicio
     return NextResponse.next()
   }
 
-  // Propagar el slug como header para que los Server Components lo lean
-  // sin necesidad de parsear la URL de nuevo.
   const response = NextResponse.next()
   response.headers.set('x-tenant-slug', slug)
   return response

@@ -32,7 +32,7 @@ export default async function ProPage() {
     const professionals = await getProfessionalsPublic(tenant.id)
     return (
       <>
-        <TopBar settings={settings} activeTab="pro" />
+        <TopBar settings={settings} activeTab="pro" tenantSlug={slug} />
         <ProfLoginPage
           tenantSlug={slug}
           professionals={professionals.map(p => ({
@@ -67,7 +67,7 @@ export default async function ProPage() {
 
   return (
     <>
-      <TopBar settings={settings} activeTab="pro" />
+      <TopBar settings={settings} activeTab="pro" tenantSlug={slug} />
       <ProfDashboard
         prof={prof as never}
         tenantSlug={slug}
