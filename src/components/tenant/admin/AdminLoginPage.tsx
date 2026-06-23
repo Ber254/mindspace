@@ -22,7 +22,7 @@ export function AdminLoginPage({ tenantSlug, marca }: Props) {
       const r = await fetch('/api/auth/admin-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-tenant-slug': tenantSlug },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ email, password, tenantSlug }),
       })
       const d = await r.json()
       if (!r.ok) { setError(d.error ?? 'Error al iniciar sesión'); return }

@@ -5,10 +5,9 @@ import { signAdminSession, COOKIE_ADMIN } from '@/lib/auth'
 
 export async function POST(req: NextRequest) {
   try {
-    const slug = req.headers.get('x-tenant-slug')
-    if (!slug) return NextResponse.json({ error: 'Tenant requerido' }, { status: 400 })
-
-    const { email, password } = await req.json()
+    const body = await req.json()
+    const { email, password } = body
+    const slug = req.headers.get('x-tenant-slug') ?? body.tenantSlug ?? req.nextUrl.searchParams.get('tenant')
     if (!email || !password) return NextResponse.json({ error: 'Email y contraseña requeridos' }, { status: 400 })
 
     const [tenant] = await sql`SELECT id FROM tenants WHERE slug = ${slug} AND active = true LIMIT 1`

@@ -29,7 +29,7 @@ export function ProfLoginPage({ tenantSlug, professionals }: Props) {
       const r = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'x-tenant-slug': tenantSlug },
-        body: JSON.stringify({ professionalId: selectedId, password }),
+        body: JSON.stringify({ professionalId: selectedId, password, tenantSlug }),
       })
       if (!r.ok) { const d = await r.json(); setError(d.error ?? 'Error'); return }
       router.refresh()   // Server Component re-corre y lee la cookie nueva
