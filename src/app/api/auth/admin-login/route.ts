@@ -13,11 +13,10 @@ export async function POST(req: NextRequest) {
     const [tenant] = await sql`SELECT id FROM tenants WHERE slug = ${slug} AND active = true LIMIT 1`
     if (!tenant) return NextResponse.json({ error: 'Tenant no encontrado' }, { status: 404 })
 
-    await sql`SELECT set_config('app.current_tenant_id', ${tenant.id}, true)`
-
-    const [admin] = await sql`
-      SELECT * FROM admin_users WHERE tenant_id = ${tenant.id} AND email = ${email} LIMIT 1
-    `
+    const [admin] = await sql.begin(async (tx) => {
+      await tx`SELECT set_config('app.current_tenant_id', ${tenant.id}, true)`
+      return tx`SELECT * FROM admin_users WHERE tenant_id = ${tenant.id} AND email = ${email} LIMIT 1`
+    })
     if (!admin) return NextResponse.json({ error: 'Credenciales incorrectas' }, { status: 401 })
 
     const valid = await bcrypt.compare(password, admin.password_hash)

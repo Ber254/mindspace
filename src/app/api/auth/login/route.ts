@@ -16,14 +16,17 @@ export async function POST(req: NextRequest) {
   `
   if (!tenant) return NextResponse.json({ error: 'Tenant not found' }, { status: 404 })
 
-  const [prof] = await sql<{ id: string; nombre: string; password_hash: string | null }[]>`
-    SELECT id, nombre, password_hash
-    FROM professionals
-    WHERE id = ${body.professionalId}
-      AND tenant_id = ${tenant.id}
-      AND active = true
-    LIMIT 1
-  `
+  const [prof] = await sql.begin(async (tx) => {
+    await tx`SELECT set_config('app.current_tenant_id', ${tenant.id}, true)`
+    return tx<{ id: string; nombre: string; password_hash: string | null }[]>`
+      SELECT id, nombre, password_hash
+      FROM professionals
+      WHERE id = ${body.professionalId}
+        AND tenant_id = ${tenant.id}
+        AND active = true
+      LIMIT 1
+    `
+  })
   if (!prof) return NextResponse.json({ error: 'Usuario o contraseña incorrectos.' }, { status: 401 })
 
   // Si no tiene contraseña asignada, aceptar "1234" como default de demo
